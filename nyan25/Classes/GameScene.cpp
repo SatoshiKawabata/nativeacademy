@@ -34,6 +34,9 @@ bool GameScene::init()
     return true;
 }
 
+/**
+ * ゲームに関する初期化処理
+ */
 void GameScene::initialize()
 {
     // 変数のシードを設定する
@@ -58,6 +61,23 @@ void GameScene::initialize()
     this->schedule(schedule_selector(GameScene::measureGametime));
 }
 
+/**
+ * ゲーム終了処理
+ */
+void GameScene::endGame()
+{
+    // ゲーム時間の計測を停止する
+    this->unschedule(schedule_selector(GameScene::measureGametime));
+    // リトライボタンを作成する
+    makeRetryButton();
+    
+    // ハイスコアを表示する
+    showHighScoreLabel();
+}
+
+/**
+ * 背景を作成する
+ */
 void GameScene::makeBackground()
 {
     // 画面サイズ取得
@@ -70,6 +90,9 @@ void GameScene::makeBackground()
     /** pBGはGameSceneが解放されるときに解放される **/
 }
 
+/**
+ * カードを生成して配置する
+ */
 void GameScene::makeCards()
 {
     // 数値配列を初期化する
@@ -109,11 +132,17 @@ void GameScene::makeCards()
     }
 }
 
+/**
+ * タッチ開始処理（おまじない的な）
+ */
 bool GameScene::ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
 {
     return true;
 }
 
+/**
+ * タッチ終了処理
+ */
 void GameScene::ccTouchEnded(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
 {
     // タップポイント取得
@@ -142,9 +171,8 @@ void GameScene::ccTouchEnded(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
         // ゲーム終了
         if (nextNumber >= 25)
         {
-            // ゲーム時間の計測を停止する
-            this->unschedule(schedule_selector(GameScene::measureGametime));
-            initialize();
+            // ゲーム終了処理
+            endGame();
             return;
         }
         
@@ -164,6 +192,9 @@ void GameScene::measureGametime(float fDelta)
     showGametimeLabel(gametime);
 }
 
+/**
+ * ゲーム時間を表示する
+ */
 void GameScene::showGametimeLabel(float _gametime)
 {
     // ゲーム時間ラベル用タグ
@@ -191,6 +222,99 @@ void GameScene::showGametimeLabel(float _gametime)
         this->addChild(timerLabel);
     }
 }
+
+/**
+ * リトライボタンを生成する
+ */
+void GameScene::makeRetryButton()
+{
+    // 画面サイズを取得する
+    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    
+    // リトライボタンを作成する
+    CCLabelTTF* retryLabel = CCLabelTTF::create("リトライ", "Arial", 24.0);
+    CCMenuItemLabel* retryItem = CCMenuItemLabel::create(retryLabel, this, menu_selector(GameScene::tapRetryButton));
+    retryItem->setPosition(ccp(winSize.width * 0.9, winSize.height * 0.2));
+    
+    // メニューを作成する
+    CCMenu* menu = CCMenu::create(retryItem, NULL);
+    menu->setPosition(CCPointZero);
+    this->addChild(menu);
+}
+
+/**
+ * リトライボタンタップハンドラ
+ */
+void GameScene::tapRetryButton(cocos2d::CCNode *node)
+{
+    // 新しくゲームのシーンを用意する
+    CCScene* gameScene = (CCScene*)GameScene::create();
+    CCDirector::sharedDirector()->replaceScene(gameScene);
+}
+
+/**
+ * ハイスコアを表示する
+ */
+void GameScene::showHighScoreLabel()
+{
+    // CCUserDefaultクラスのインスタンスを取得する（データの永続化に関するクラス）
+    CCUserDefault* userDefault = CCUserDefault::sharedUserDefault();
+    
+    // ハイスコアのキー取得する
+    const char* highScoreKey = "highscore";
+    
+    // 以前のハイスコアの取得する
+    float highScore = userDefault->getFloatForKey(highScoreKey, 99.9);
+    if (gametime != 0)
+    {
+        if (gametime > highScore)
+        {
+            // ハイスコアが更新されていない場合は抜ける
+            return;
+        }
+        else
+        {
+            // ハイスコアを更新する
+            highScore = gametime;
+            // ハイスコアを記録する
+            userDefault->setFloatForKey(highScoreKey, highScore);
+            userDefault->flush();   // 実際に記録する
+        }
+    }
+    
+    // ハイスコアラベル用タグ
+    const int tagHighScoreLabel = 200;
+    // ハイスコアを表示する文字列を生成する
+    CCString* highScoreString = CCString::createWithFormat("%8.1fs", highScore);
+    
+    // ハイスコアラベルを取得する
+    CCLabelTTF* highScoreLabel = (CCLabelTTF*)this->getChildByTag(tagHighScoreLabel);
+    if (highScoreLabel)
+    {
+        // ハイスコアラベルを更新する
+        highScoreLabel->setString(highScoreString->getCString());
+    }
+    else
+    {
+        // 画面サイズを取得する
+        CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+        
+        // ハイスコアラベルを生成する
+        highScoreLabel = CCLabelTTF::create(highScoreString->getCString(), "Arial", 24.0);
+        highScoreLabel->setPosition(ccp(winSize.width * 0.9, winSize.height * 0.7));
+        highScoreLabel->setTag(tagHighScoreLabel);
+        this->addChild(highScoreLabel);
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 
