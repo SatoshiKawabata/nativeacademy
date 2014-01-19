@@ -29,10 +29,12 @@ bool HelloWorld::init()
         return false;
     }
 
+    // テクスチャ
     _batchNode = CCSpriteBatchNode::create("Sprites.pvr.ccz");
     this->addChild(_batchNode);
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("Sprites.plist");
 
+    // プレイヤーの機体
     _ship = CCSprite::createWithSpriteFrameName("SpaceFlier_sm_1.png");
     CCSize winSize = CCDirector::sharedDirector()->getWinSize();
     _ship->setPosition(ccp(winSize.width * 0.1, winSize.height * 0.5));
@@ -70,6 +72,7 @@ bool HelloWorld::init()
     
     this->setAccelerometerEnabled(true);
     
+    // 小惑星
     #define KNUMASTEROIDS 15
     _asteroids = new CCArray();
     for(int i = 0; i < KNUMASTEROIDS; ++i) {
@@ -79,6 +82,7 @@ bool HelloWorld::init()
         _asteroids->addObject(asteroid);
     }
     
+    // レーザー
     #define KNUMLASERS 5
     _shipLasers = new CCArray();
     for(int i = 0; i < KNUMLASERS; ++i) {
@@ -89,6 +93,7 @@ bool HelloWorld::init()
     }
     this->setTouchEnabled(true);
     
+    // 残機
     _lives = 3;
     double curTime = getTimeTick();
     _gameOverTime = curTime + 30000;
@@ -98,7 +103,6 @@ bool HelloWorld::init()
     SimpleAudioEngine::sharedEngine()->preloadEffect("laser_ship.wav");
     
     return true;
-
 }
 
 void HelloWorld::menuCloseCallback(CCObject* pSender)
@@ -110,7 +114,11 @@ void HelloWorld::menuCloseCallback(CCObject* pSender)
 #endif
 }
 
+/**
+ * 毎フレーム処理
+ */
 void HelloWorld::update(float dt) {
+    // パララックスノードの位置を更新
     CCPoint backgroundScrollVert = ccp(-1000,0);
     _backgroundNode->setPosition(ccpAdd(_backgroundNode->getPosition(), ccpMult(backgroundScrollVert, dt)));
     
@@ -119,24 +127,28 @@ void HelloWorld::update(float dt) {
     spaceDusts->addObject(_spacedust2);
     for ( int ii = 0; ii <spaceDusts->count(); ii++ ) {
         CCSprite * spaceDust = (CCSprite *)(spaceDusts->objectAtIndex(ii));
-        float xPosition = _backgroundNode->convertToWorldSpace(spaceDust->getPosition()).x ;
+        float xPosition = _backgroundNode->convertToWorldSpace(spaceDust->getPosition()).x;
         float size = spaceDust->getContentSize().width;
+        // 画面外に出たら
         if ( xPosition < -size/2 ) {
+            // パララックスノードから消去する
             _backgroundNode->incrementOffset(ccp(spaceDust->getContentSize().width*2,0),spaceDust);
         }
     }
     
+    // 
     CCArray *backGrounds = CCArray::createWithCapacity(4);
     backGrounds->addObject(_galaxy);
-    backGrounds->addObject(_planetsunrise);
-    backGrounds->addObject(_spacialanomaly);
-    backGrounds->addObject(_spacialanomaly2);
+//    backGrounds->addObject(_planetsunrise);
+//    backGrounds->addObject(_spacialanomaly);
+//    backGrounds->addObject(_spacialanomaly2);
     for ( int ii = 0; ii <backGrounds->count(); ii++ ) {
         CCSprite * background = (CCSprite *)(backGrounds->objectAtIndex(ii));
         float xPosition = _backgroundNode->convertToWorldSpace(background->getPosition()).x;
         float size = background->getContentSize().width;
+        // 画面外に出たら
         if ( xPosition < -size ) {
-            _backgroundNode->incrementOffset(ccp(2000,0),background); 
+            _backgroundNode->incrementOffset(ccp(2000,0),background);
         }
     }
     
@@ -174,12 +186,15 @@ void HelloWorld::update(float dt) {
     // Asteroids
     CCObject* asteroid;
     CCObject* shipLaser;
+    // 小惑星ループ
     CCARRAY_FOREACH(_asteroids, asteroid){
         if (!((CCSprite *) asteroid)->isVisible() )
             continue;
+        // レーザーループ
         CCARRAY_FOREACH(_shipLasers, shipLaser){
             if (!((CCSprite *) shipLaser)->isVisible())
                 continue;
+            // 小惑星とレーザーとの当たり判定
             if (((CCSprite *) shipLaser)->boundingBox().intersectsRect(((CCSprite *)asteroid)->boundingBox()) ) {
                 SimpleAudioEngine::sharedEngine()->playEffect("explosion_large.wav");
                 ((CCSprite *)shipLaser)->setVisible(false);
@@ -187,6 +202,7 @@ void HelloWorld::update(float dt) {
                 continue;
             }
         }
+        // 船と小惑星の当たり判定
         if (_ship->boundingBox().intersectsRect(((CCSprite *)asteroid)->boundingBox()) ) {
             ((CCSprite *)asteroid)->setVisible(false);
             _ship->runAction( CCBlink::create(1.0, 9));
@@ -194,6 +210,7 @@ void HelloWorld::update(float dt) {
         }
     }
     
+    // ゲームオーバー処理
     if (_lives <= 0) {
         _ship->stopAllActions();
         _ship->setVisible(false);
