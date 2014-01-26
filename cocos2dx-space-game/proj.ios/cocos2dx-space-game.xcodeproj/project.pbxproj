@@ -247,6 +247,7 @@
 		D4EF949C15BD2D8E00D803EB /* Icon-114.png in Resources */ = {isa = PBXBuildFile; fileRef = D4EF949B15BD2D8E00D803EB /* Icon-114.png */; };
 		D4EF949E15BD2D9600D803EB /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = D4EF949D15BD2D9600D803EB /* Icon-72.png */; };
 		D4EF94A015BD2D9800D803EB /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = D4EF949F15BD2D9800D803EB /* Icon-144.png */; };
+		FA49900B1894E25400B99B2C /* Asteroid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA4990091894E25400B99B2C /* Asteroid.cpp */; };
 		FAF23E0D1883E41A00BC00A2 /* CCParallaxNodeExtras.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAF23E0B1883E41A00BC00A2 /* CCParallaxNodeExtras.cpp */; };
 		FAF23E251883E42500BC00A2 /* Arial.fnt in Resources */ = {isa = PBXBuildFile; fileRef = FAF23E0E1883E42500BC00A2 /* Arial.fnt */; };
 		FAF23E261883E42500BC00A2 /* Arial.png in Resources */ = {isa = PBXBuildFile; fileRef = FAF23E0F1883E42500BC00A2 /* Arial.png */; };
@@ -767,6 +768,8 @@
 		D4EF949D15BD2D9600D803EB /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../proj.ios/Icon-72.png"; sourceTree = "<group>"; };
 		D4EF949F15BD2D9800D803EB /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-144.png"; path = "../proj.ios/Icon-144.png"; sourceTree = "<group>"; };
 		D4F9F37B12E54555005CA6D2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		FA4990091894E25400B99B2C /* Asteroid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Asteroid.cpp; path = ../Classes/Asteroid.cpp; sourceTree = "<group>"; };
+		FA49900A1894E25400B99B2C /* Asteroid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Asteroid.h; path = ../Classes/Asteroid.h; sourceTree = "<group>"; };
 		FAF23E0B1883E41A00BC00A2 /* CCParallaxNodeExtras.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCParallaxNodeExtras.cpp; path = ../Classes/CCParallaxNodeExtras.cpp; sourceTree = "<group>"; };
 		FAF23E0C1883E41A00BC00A2 /* CCParallaxNodeExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCParallaxNodeExtras.h; path = ../Classes/CCParallaxNodeExtras.h; sourceTree = "<group>"; };
 		FAF23E0E1883E42500BC00A2 /* Arial.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Arial.fnt; sourceTree = "<group>"; };
@@ -1316,6 +1319,8 @@
 				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
 				1AFAF8B516D35DE700DB1158 /* HelloWorldScene.cpp */,
 				1AFAF8B616D35DE700DB1158 /* HelloWorldScene.h */,
+				FA4990091894E25400B99B2C /* Asteroid.cpp */,
+				FA49900A1894E25400B99B2C /* Asteroid.h */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -2128,6 +2133,7 @@
 				379BB9D317F03F3700829B88 /* CCSGUIReader.cpp in Sources */,
 				379BB9D417F03F3700829B88 /* CCSSceneReader.cpp in Sources */,
 				FAF23E0D1883E41A00BC00A2 /* CCParallaxNodeExtras.cpp in Sources */,
+				FA49900B1894E25400B99B2C /* Asteroid.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
